@@ -6,73 +6,79 @@ public class EditDistanceCalculator {
 	private static final int substitutionCostIfMatch = 0;
 	private static final int substitutionCostIfNoMatch = 2;
 	
-	public static int [][] calculateTable (String baseString, String targetString) {//transformation = insertion or deletion or substitution
 	
+	//
+	public static int calculateFinalEditDistance (String baseString, String targetString) {
 		
+		EditDistanceTable table = calculateTable(baseString, targetString);
+		int finalValue = table.getFinalValue();
+		return finalValue;
+	}
+	
+	public static EditDistanceTable calculateTable (String baseString, String targetString) {
+	
 		int baseStringLength = baseString.length();
 		int targetStringLength = targetString.length();
 		
-		
-		int [][] editDistanceTable = createBlankTable (baseStringLength, targetStringLength);
+		EditDistanceTable table = initializeTable (baseStringLength, targetStringLength);
 		
 		String[] baseStringArray = baseString.split("");
 		String[] targetStringArray = targetString.split("");
 		
+		/*start with 1 as 0th row and column is already filled by the createBlankTable 
+		*/
+		for (int i = 1; i<=baseStringLength; i++){  
+			
+			for (int j = 1; j<=targetStringLength; j++) {		
+			
+				calculateEditDistance (table, baseStringArray, targetStringArray, i,j);
+				}	
+			}
+		return table;
+	}
+	
+	//calculate i-th row and j-th column entry of editDistanceTable
+	private static void calculateEditDistance(EditDistanceTable table, String[] baseStringArray, String[] targetStringArray, int i,int j) { 
 		
-			int costOfSubstitution; 
-	
-			
-			/*start with 1 as 0th row and column is already filled by the createBlankTable */
-			for (int i = 1; i<=baseStringLength; i++){  
+		int[][] tempTable = table.getFullTable();
+		int insertion = tempTable[i-1][j] + insertionCost;  
+		int deletion = tempTable[i][j-1] + deletionCost;
+		
+		int costOfSubstitution;
+		//to calculate cost of substitution, check whether the i-th character of both strings match					
+		if (baseStringArray[i-1].equals(targetStringArray[j-1])) { //-1 as array indexes start with 0 and our counter starts with 1
+		costOfSubstitution = substitutionCostIfMatch;
+		}
 				
-					for (int j = 1; j<=targetStringLength; j++) {		
-					
-						int insertion = editDistanceTable[i-1][j] + insertionCost;  
-						int deletion = editDistanceTable[i][j-1] + deletionCost;
-							
-						//-1 as array indexes start with 0 and our counter starts with 1
-							if (baseStringArray[i-1].equals(targetStringArray[j-1])) {
-								costOfSubstitution = substitutionCostIfMatch;
-							}
-				
-							else {
-								costOfSubstitution = substitutionCostIfNoMatch;
-							}
+		else {
+		costOfSubstitution = substitutionCostIfNoMatch;
+		}
 			
-			
-						int substitution = editDistanceTable[i-1][j-1] + costOfSubstitution;
+		int substitution = tempTable[i-1][j-1] + costOfSubstitution;
 						
-							editDistanceTable[i][j] = min(insertion, deletion, substitution);
-			
-					}	
-			}	
-		return editDistanceTable;
+		tempTable[i][j] = Methods.min(insertion, deletion, substitution);
+		
+		table.setFullTable(tempTable);
 	}
 	
 	
 	
-	private static int min(int a, int b, int c) {
-	    return Math.min(Math.min(a, b), c);
-	}
-	
-	
-	
-	private static int[][]  createBlankTable (int baseStringLength, int targetStringLength ) {
+	//create edit distance table with initalization values in 0-th row and column
+	private static EditDistanceTable  initializeTable (int baseStringLength, int targetStringLength ) { 
 
-		int [][] editDistanceTable;
-		// +1, as the 0th row and column is for the initialization values from blank table
-		// if the string has 9 letters, the table has to be of size 10
-		editDistanceTable = new int[baseStringLength+1][targetStringLength+1]; 
+		EditDistanceTable table = new EditDistanceTable();
+		
+		int[][] tempTable = new int[baseStringLength+1][targetStringLength+1]; //+1 because of 0-th row and column
 		
 		for (int i = 0; i<=baseStringLength; i++) {
-			editDistanceTable[i][0] = i;
+			tempTable[i][0] = i;
 		}
 		
 		for (int i = 0; i<=targetStringLength; i++) {
-			editDistanceTable[0][i] = i;
+			tempTable[0][i] = i;
 		}
-	
-		return editDistanceTable;
+		table.setFullTable (tempTable);
+		return table;
 		
 	}
 
@@ -80,12 +86,9 @@ public class EditDistanceCalculator {
 	public static void main(String[] args) {
 			
 			
-			int[][] editDistanceTable = EditDistanceCalculator.calculateTable ("execution", "intention");
-			
-			 for(int[] row : editDistanceTable) {
-		        FormattedTablePrint.printRow(row);
-		    }
-
+		
+			EditDistanceTable table = calculateTable("execution", "intention");
+			table.printTable();
 			
 		}
 
