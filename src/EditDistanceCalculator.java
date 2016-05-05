@@ -6,8 +6,8 @@ public class EditDistanceCalculator {
 	private static final int substitutionCostIfMatch = 0;
 	private static final int substitutionCostIfNoMatch = 2;
 	
-	
-	public static void printEditDistanceTable (String baseString, String targetString) { //print whole table
+	//print whole table
+	public static void printEditDistanceTable (String baseString, String targetString) { 
 		
 		editDistanceTable  = calculateTable(baseString, targetString);
 			
@@ -17,31 +17,31 @@ public class EditDistanceCalculator {
 
 	}
 	
-	private static int[][] calculateTable (String baseString, String targetString) {//transformation = insertion or deletion or substitution
+	//calculate whole table
+	private static int[][] calculateTable (String baseString, String targetString) {
 	
-		
 		int baseStringLength = baseString.length();
 		int targetStringLength = targetString.length();
-		
 		
 		int [][] editDistanceTable = initializeTable (baseStringLength, targetStringLength);
 		
 		String[] baseStringArray = baseString.split("");
 		String[] targetStringArray = targetString.split("");
 		
-			/*start with 1 as 0th row and column is already filled by the createBlankTable 
-			*/
-			for (int i = 1; i<=baseStringLength; i++){  
-				
-					for (int j = 1; j<=targetStringLength; j++) {		
-					
-						calculateEditDistance (i,j);
-					}	
+		/*start with 1 as 0th row and column is already filled by the createBlankTable 
+		*/
+		for (int i = 1; i<=baseStringLength; i++){  
+			
+			for (int j = 1; j<=targetStringLength; j++) {		
+			
+				calculateEditDistance (i,j);
+				}	
 			}
 		return editDistanceTable;
 	}
 	
-	private static void calculateEditDistance(i, j) { //calculate i-th row and j-th column entry of editDistanceTable
+	//calculate i-th row and j-th column entry of editDistanceTable
+	private static void calculateEditDistance(i, j) { 
 		int insertion = editDistanceTable[i-1][j] + insertionCost;  
 		int deletion = editDistanceTable[i][j-1] + deletionCost;
 			
@@ -58,6 +58,7 @@ public class EditDistanceCalculator {
 						
 		editDistanceTable[i][j] = min(insertion, deletion, substitution);
 	}
+	
 	
 	private static int min(int a, int b, int c) {
 	    return Math.min(Math.min(a, b), c);
