@@ -6,11 +6,6 @@ public class EditDistanceCalculator {
 	private static final int substitutionCostIfMatch = 0;
 	private static final int substitutionCostIfNoMatch = 2;
 	
-	public static void printEditDistance (String baseString, String targetString) { //print only final value
-		
-		editDistanceTable  = calculateTable(baseString, targetString);
-		
-	}
 	
 	public static void printEditDistanceTable (String baseString, String targetString) { //print whole table
 		
@@ -29,7 +24,7 @@ public class EditDistanceCalculator {
 		int targetStringLength = targetString.length();
 		
 		
-		int [][] editDistanceTable = createBlankTable (baseStringLength, targetStringLength);
+		int [][] editDistanceTable = initializeTable (baseStringLength, targetStringLength);
 		
 		String[] baseStringArray = baseString.split("");
 		String[] targetStringArray = targetString.split("");
@@ -43,23 +38,21 @@ public class EditDistanceCalculator {
 						calculateEditDistance (i,j);
 					}	
 			}
-		int editDistanceFinalValue
 		return editDistanceTable;
 	}
 	
 	private static void calculateEditDistance(i, j) { //calculate i-th row and j-th column entry of editDistanceTable
 		int insertion = editDistanceTable[i-1][j] + insertionCost;  
 		int deletion = editDistanceTable[i][j-1] + deletionCost;
-							
-			//-1 as array indexes start with 0 and our counter starts with 1
-			if (baseStringArray[i-1].equals(targetStringArray[j-1])) {
-			costOfSubstitution = substitutionCostIfMatch;
-			}
-				
-			else {
-			costOfSubstitution = substitutionCostIfNoMatch;
-			}
 			
+		//to calculate cost of substitution, check whether the i-th character of both strings match					
+		if (baseStringArray[i-1].equals(targetStringArray[j-1])) { //-1 as array indexes start with 0 and our counter starts with 1
+		costOfSubstitution = substitutionCostIfMatch;
+		}
+				
+		else {
+		costOfSubstitution = substitutionCostIfNoMatch;
+		}
 			
 		int substitution = editDistanceTable[i-1][j-1] + costOfSubstitution;
 						
@@ -71,13 +64,11 @@ public class EditDistanceCalculator {
 	}
 	
 	
-	
-	private static int[][]  createBlankTable (int baseStringLength, int targetStringLength ) { //initializa edit distance table
+	//create edit distance table with initalization values in 0-th row and column
+	private static int[][]  initializeTable (int baseStringLength, int targetStringLength ) { 
 
 		int [][] editDistanceTable;
-		// +1, as the 0th row and column is for the initialization values from blank table
-		// if the string has 9 letters, the table has to be of size 10
-		editDistanceTable = new int[baseStringLength+1][targetStringLength+1]; 
+		editDistanceTable = new int[baseStringLength+1][targetStringLength+1]; //+1 because of 0-th row and column
 		
 		for (int i = 0; i<=baseStringLength; i++) {
 			editDistanceTable[i][0] = i;
