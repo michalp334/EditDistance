@@ -1,5 +1,5 @@
 //collection of useful universal methods
-public class Methods {
+public class CalculatorHelperTools {
 
     public static void printRow(int[] row) {
         for (int i : row) {
