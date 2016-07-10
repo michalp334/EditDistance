@@ -1,3 +1,4 @@
+package editDistanceCalculator;
 
 public class EditDistanceCalculator {
 	
@@ -56,7 +57,7 @@ public class EditDistanceCalculator {
 			
 		int substitution = tempTable[i-1][j-1] + costOfSubstitution;
 						
-		tempTable[i][j] = Methods.min(insertion, deletion, substitution);
+		tempTable[i][j] = CalculatorHelperTools.min(insertion, deletion, substitution);
 		
 		table.setFullTable(tempTable);
 	}

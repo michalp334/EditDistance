@@ -1,3 +1,4 @@
+package editDistanceCalculator;
 
 public class EditDistanceTable {
 	
@@ -24,7 +25,7 @@ public class EditDistanceTable {
 			int[][] tempTable = this.fullTable;
 				
 			for(int[] row : tempTable) {
-			        Methods.printRow(row);
+			        CalculatorHelperTools.printRow(row);
 		    	}
 
 		}

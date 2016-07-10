@@ -1,3 +1,4 @@
+package editDistanceCalculator;
 //collection of useful universal methods
 public class CalculatorHelperTools {
 
